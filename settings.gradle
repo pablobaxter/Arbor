@@ -1,0 +1,6 @@
+rootProject.name = 'Arbor'
+
+include ':android',
+        ':shared'
+
+enableFeaturePreview('GRADLE_METADATA')

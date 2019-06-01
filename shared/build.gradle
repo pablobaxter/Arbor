@@ -1,0 +1,39 @@
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+
+kotlin {
+    jvm()
+    targets {
+        final def iOSTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos")   \
+                                ? presets.iosArm64 : presets.iosX64
+
+        fromPreset(iOSTarget, 'ios') {
+            binaries {
+                framework('Arbor')
+            }
+        }
+    }
+    
+    sourceSets {
+        commonMain.dependencies {
+            implementation "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
+
+            // COROUTINE
+            implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$kotlin_coroutine_version"
+        }
+
+        iosMain.dependencies {
+            // COROUTINE
+            implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-native:$kotlin_coroutine_version"
+        }
+        
+        jvmMain.dependencies {
+            // COROUTINE
+            implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutine_version"
+        }
+    }
+}
+
+// workaround for https://youtrack.jetbrains.com/issue/KT-27170
+configurations {
+    compileClasspath
+}
