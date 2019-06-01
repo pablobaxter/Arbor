@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 
 internal actual object ArborDispatchers {
 
-    actual val Logger: CoroutineDispatcher = Dispatchers.IO
+    @JvmSynthetic
+    internal actual val Logger: CoroutineDispatcher = Dispatchers.IO
 
 }

@@ -14,7 +14,7 @@ import kotlin.coroutines.CoroutineContext
 
 internal actual object ArborDispatchers {
 
-    actual val Logger: CoroutineDispatcher = NsQueueDispatcher(dispatch_queue_create("ArborQueue", null))
+    internal actual val Logger: CoroutineDispatcher = NsQueueDispatcher(dispatch_queue_create("ArborQueue", null))
 
 }
 

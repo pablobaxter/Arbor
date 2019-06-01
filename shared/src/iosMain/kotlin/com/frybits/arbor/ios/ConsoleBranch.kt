@@ -19,7 +19,7 @@ class ConsoleBranch(level: Level = Info, vararg tags: String) : Branch(level, *t
     }
 
     override fun onLog(level: Level, tag: String, message: String?, throwable: Throwable?) {
-        when(level) {
+        when (level) {
             Verbose, Debug, Info -> {
                 println("${level::class.simpleName}::$tag::${message ?: ""}")
                 throwable?.printStackTrace()

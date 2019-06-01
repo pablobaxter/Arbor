@@ -9,5 +9,5 @@ import kotlinx.coroutines.CoroutineDispatcher
 
 internal expect object ArborDispatchers {
 
-    val Logger: CoroutineDispatcher
+    internal val Logger: CoroutineDispatcher
 }

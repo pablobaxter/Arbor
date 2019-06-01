@@ -1,5 +1,7 @@
 package com.frybits.arbor
 
+import kotlin.jvm.JvmSynthetic
+
 /**
  * Frybits
  * Created by Pablo Baxter (Github: pablobaxter)
@@ -7,11 +9,11 @@ package com.frybits.arbor
 
 internal sealed class Action
 
-internal data class Add(val branch: Branch) : Action()
-internal data class Remove(val branch: Branch) : Action()
+internal data class Add(@JvmSynthetic internal val branch: Branch) : Action()
+internal data class Remove(@JvmSynthetic internal val branch: Branch) : Action()
 internal data class Log(
-        val level: Level,
-        val tag: String,
-        val message: String? = null,
-        val throwable: Throwable? = null
+        @JvmSynthetic internal val level: Level,
+        @JvmSynthetic internal val tag: String,
+        @JvmSynthetic internal val message: String? = null,
+        @JvmSynthetic internal val throwable: Throwable? = null
 ) : Action()

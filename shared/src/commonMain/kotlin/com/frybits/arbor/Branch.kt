@@ -5,6 +5,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.jvm.JvmSynthetic
 
 /**
  * Frybits
@@ -47,14 +48,17 @@ abstract class Branch(private val logLevel: Level, vararg filterTags: String) {
         }
     }
 
+    @JvmSynthetic
     internal fun sendLog(log: Log) {
         logChannel.offer(log)
     }
 
+    @JvmSynthetic
     internal fun notifyAdd() {
         logChannel.offer(Add(this@Branch))
     }
 
+    @JvmSynthetic
     internal fun notifyRemove() {
         logChannel.offer(Remove(this@Branch))
     }

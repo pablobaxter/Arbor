@@ -3,12 +3,17 @@ apply plugin: 'org.jetbrains.kotlin.multiplatform'
 kotlin {
     jvm()
     targets {
-        final def iOSTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos")   \
-                                ? presets.iosArm64 : presets.iosX64
-
-        fromPreset(iOSTarget, 'ios') {
+        def buildForDevice = project.findProperty("device")?.toBoolean() ?: false
+        def iosPreset = (buildForDevice) ? presets.iosArm64 : presets.iosX64
+        fromPreset(iosPreset, 'ios') {
             binaries {
-                framework('Arbor')
+                framework('Arbor') {
+
+                    // Disable bitcode embedding for the simulator build.
+                    if (!buildForDevice) {
+                        embedBitcode("disable")
+                    }
+                }
             }
         }
     }
@@ -21,6 +26,11 @@ kotlin {
             implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$kotlin_coroutine_version"
         }
 
+        commonTest.dependencies {
+            implementation "org.jetbrains.kotlin:kotlin-test-common:$kotlin_version"
+            implementation "org.jetbrains.kotlin:kotlin-test-annotations-common:$kotlin_version"
+        }
+
         iosMain.dependencies {
             // COROUTINE
             implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-native:$kotlin_coroutine_version"
@@ -30,10 +40,28 @@ kotlin {
             // COROUTINE
             implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutine_version"
         }
+
+        jvmTest.dependencies {
+            implementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+        }
     }
 }
 
 // workaround for https://youtrack.jetbrains.com/issue/KT-27170
 configurations {
     compileClasspath
+}
+
+task iosTest {
+    def device = project.findProperty("iosDevice")?.toString() ?: "iPhone 8"
+    dependsOn 'linkTestDebugExecutableIos'
+    group = JavaBasePlugin.VERIFICATION_GROUP
+    description = "Runs test for target 'ios' on an iOS simulator"
+    
+    doLast {
+        def binary = kotlin.targets.ios.binaries.getExecutable('test', 'DEBUG').outputFile
+        exec {
+            commandLine 'xcrun', 'simctl', 'spawn', device, binary.absolutePath
+        }
+    }
 }
