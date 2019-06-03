@@ -21,17 +21,17 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
-
-            // COROUTINE
-            implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$kotlin_coroutine_version"
         }
 
         commonTest.dependencies {
             implementation "org.jetbrains.kotlin:kotlin-test-common:$kotlin_version"
             implementation "org.jetbrains.kotlin:kotlin-test-annotations-common:$kotlin_version"
-        }
 
-        iosMain.dependencies {
+            // COROUTINE
+            implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$kotlin_coroutine_version"
+        }
+        
+        iOsTest.dependencies {
             // COROUTINE
             implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-native:$kotlin_coroutine_version"
         }
@@ -43,6 +43,9 @@ kotlin {
 
         jvmTest.dependencies {
             implementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+
+            // COROUTINE
+            implementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlin_coroutine_version"
         }
     }
 }
