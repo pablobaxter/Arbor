@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * Created by Pablo Baxter (Github: pablobaxter)
  */
 
-actual object Arbor {
+internal actual class ArborLoggingContainer actual constructor() {
 
     private val updateChannel = Channel<Action>(Channel.UNLIMITED)
 
@@ -50,33 +50,13 @@ actual object Arbor {
         }
     }
 
-    actual fun addBranch(branch: Branch) {
-        updateChannel.offer(Add(branch))
-    }
-
-    actual fun removeBranch(branch: Branch) {
-        updateChannel.offer(Remove(branch))
-    }
-
-    actual fun clear() {
-        updateChannel.offer(Clear)
-    }
-
-    //Only visible for testing
     @JvmSynthetic
-    internal actual fun branchCount(): Int = branchCount.get()
-
-    actual fun log(level: Level, tag: String, message: String?, throwable: Throwable?) {
-        updateChannel.offer(Log(level, tag, message, throwable))
+    internal actual fun submit(action: Action) {
+        updateChannel.offer(action)
     }
 
-    actual fun e(tag: String, message: String?, throwable: Throwable?) = log(Error, tag, message, throwable)
-
-    actual fun w(tag: String, message: String?, throwable: Throwable?) = log(Warn, tag, message, throwable)
-
-    actual fun i(tag: String, message: String?, throwable: Throwable?) = log(Info, tag, message, throwable)
-
-    actual fun d(tag: String, message: String?, throwable: Throwable?) = log(Debug, tag, message, throwable)
-
-    actual fun v(tag: String, message: String?, throwable: Throwable?) = log(Verbose, tag, message, throwable)
+    @JvmSynthetic
+    internal actual fun branchCount(): Int {
+        return branchCount.get()
+    }
 }

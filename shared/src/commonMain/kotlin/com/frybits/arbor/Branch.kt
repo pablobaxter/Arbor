@@ -5,15 +5,32 @@ package com.frybits.arbor
  * Created by Pablo Baxter (Github: pablobaxter)
  */
 
-expect abstract class Branch(level: Level, vararg filterTags: String) {
+abstract class Branch(private val logLevel: Level, vararg filterTags: String) {
 
-    internal val logLevel: Level
+    private val filterTagSet = setOf(*filterTags)
+    private val branchDispatcher = BranchDispatcher(this)
 
-    internal val filterTagSet: Set<String>
+    internal fun sendLog(log: Log) {
+        branchDispatcher.submit(log)
+    }
+
+    internal fun notifyAdd() {
+        branchDispatcher.submit(Add(this))
+    }
+
+    internal fun notifyRemove() {
+        branchDispatcher.submit(Remove(this))
+    }
+
+    internal fun log(log: Log) {
+        if (log.level >= logLevel && (filterTagSet.isEmpty()) || filterTagSet.contains(log.tag)) {
+            onLog(log.level, log.tag, log.message, log.throwable)
+        }
+    }
 
     abstract fun onAdd()
 
     abstract fun onRemove()
 
-    abstract fun onLog(level: Level, tag: String, message: String? = null, throwable: Throwable? = null)
+    abstract fun onLog(level: Level, tag: String, message: String?, throwable: Throwable?)
 }

@@ -31,7 +31,7 @@ kotlin {
             implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$kotlin_coroutine_version"
         }
         
-        iOsTest.dependencies {
+        iosMain.dependencies {
             // COROUTINE
             implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-native:$kotlin_coroutine_version"
         }

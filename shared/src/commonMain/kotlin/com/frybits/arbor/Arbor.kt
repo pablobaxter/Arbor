@@ -1,32 +1,44 @@
 package com.frybits.arbor
 
-import kotlin.jvm.JvmSynthetic
+import kotlin.native.concurrent.ThreadLocal
 
 /**
  * Frybits
  * Created by Pablo Baxter (Github: pablobaxter)
  */
 
-expect object Arbor {
+//Needed for K/N coroutines
+@ThreadLocal
+object Arbor {
 
-    fun addBranch(branch: Branch)
+    private val branchLoggingContainer = ArborLoggingContainer()
 
-    fun removeBranch(branch: Branch)
+    fun addBranch(branch: Branch) {
+        branchLoggingContainer.submit(Add(branch))
+    }
 
-    fun clear()
+    fun removeBranch(branch: Branch) {
+        branchLoggingContainer.submit(Remove(branch))
+    }
 
-    @JvmSynthetic
-    internal fun branchCount(): Int
+    fun clear() {
+        branchLoggingContainer.submit(Clear)
+    }
 
-    fun log(level: Level, tag: String, message: String? = null, throwable: Throwable? = null)
+    //Only visible for testing
+    internal fun branchCount(): Int = branchLoggingContainer.branchCount()
 
-    fun e(tag: String, message: String? = null, throwable: Throwable? = null)
+    fun log(level: Level, tag: String, message: String? = null, throwable: Throwable? = null) {
+        branchLoggingContainer.submit(Log(level, tag, message, throwable))
+    }
 
-    fun w(tag: String, message: String? = null, throwable: Throwable? = null)
+    fun e(tag: String, message: String? = null, throwable: Throwable? = null) = log(Error, tag, message, throwable)
 
-    fun i(tag: String, message: String? = null, throwable: Throwable? = null)
+    fun w(tag: String, message: String? = null, throwable: Throwable? = null) = log(Warn, tag, message, throwable)
 
-    fun d(tag: String, message: String? = null, throwable: Throwable? = null)
+    fun i(tag: String, message: String? = null, throwable: Throwable? = null) = log(Info, tag, message, throwable)
 
-    fun v(tag: String, message: String? = null, throwable: Throwable? = null)
+    fun d(tag: String, message: String? = null, throwable: Throwable? = null) = log(Debug, tag, message, throwable)
+
+    fun v(tag: String, message: String? = null, throwable: Throwable? = null) = log(Verbose, tag, message, throwable)
 }
