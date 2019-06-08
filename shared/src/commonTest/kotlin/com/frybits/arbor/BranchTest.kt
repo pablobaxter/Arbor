@@ -17,9 +17,9 @@ abstract class BranchTest {
 
     @Test
     fun `Add branch to Arbor`() {
-        Arbor.clear()
+        clear()
         val onAddCompletable = CompletableDeferred<Boolean>()
-        Arbor.addBranch(object : Branch(Verbose) {
+        addBranch(object : Branch(Level.Verbose) {
             override fun onAdd() {
                 onAddCompletable.complete(true)
             }
@@ -38,9 +38,9 @@ abstract class BranchTest {
 
     @Test
     fun `Remove branch from Arbor`() {
-        Arbor.clear()
+        clear()
         val onRemoveCompletableDeferred = CompletableDeferred<Boolean>()
-        val branch = object : Branch(Verbose) {
+        val branch = object : Branch(Level.Verbose) {
             override fun onAdd() {
                 println("Branch was added")
             }
@@ -52,8 +52,8 @@ abstract class BranchTest {
             override fun onLog(level: Level, tag: String, message: String?, throwable: Throwable?) {
             }
         }
-        Arbor.addBranch(branch)
-        Arbor.removeBranch(branch)
+        addBranch(branch)
+        removeBranch(branch)
         runTest {
             withTimeout(100) {
                 onRemoveCompletableDeferred.await()
@@ -63,18 +63,18 @@ abstract class BranchTest {
 
     @Test
     fun `Clear branches from Arbor`() {
-        Arbor.clear()
+        clear()
         runTest {
             delay(100)
         }
-        assertEquals(0, Arbor.branchCount(), "Arbor is not initially clear!")
+        assertEquals(0, _branchCount(), "Arbor is not initially clear!")
         val onDummy1Add = CompletableDeferred<Boolean>()
         val onDummy2Add = CompletableDeferred<Boolean>()
 
         val onDummy1Remove = CompletableDeferred<Boolean>()
         val onDummy2Remove = CompletableDeferred<Boolean>()
 
-        val dummyBranch1 = object : Branch(Verbose) {
+        val dummyBranch1 = object : Branch(Level.Verbose) {
             override fun onAdd() {
                 onDummy1Add.complete(true)
             }
@@ -85,7 +85,7 @@ abstract class BranchTest {
 
             override fun onLog(level: Level, tag: String, message: String?, throwable: Throwable?) {}
         }
-        val dummyBranch2 = object : Branch(Verbose) {
+        val dummyBranch2 = object : Branch(Level.Verbose) {
             override fun onAdd() {
                 onDummy2Add.complete(true)
             }
@@ -96,41 +96,41 @@ abstract class BranchTest {
 
             override fun onLog(level: Level, tag: String, message: String?, throwable: Throwable?) {}
         }
-        Arbor.addBranch(dummyBranch1)
+        addBranch(dummyBranch1)
         runTest {
             withTimeout(100) {
                 onDummy1Add.await()
-                assertEquals(1, Arbor.branchCount(), "Arbor branch count is off!")
+                assertEquals(1, _branchCount(), "Arbor branch count is off!")
             }
         }
-        Arbor.addBranch(dummyBranch2)
+        addBranch(dummyBranch2)
         runTest {
             withTimeout(100) {
                 onDummy2Add.await()
-                assertEquals(2, Arbor.branchCount(), "Arbor branch count is off!")
+                assertEquals(2, _branchCount(), "Arbor branch count is off!")
             }
 
         }
-        Arbor.clear()
+        clear()
         runTest {
             withTimeout(100) {
                 onDummy1Remove.await()
                 onDummy2Remove.await()
-                assertEquals(0, Arbor.branchCount(), "Arbor branch count is off!")
+                assertEquals(0, _branchCount(), "Arbor branch count is off!")
             }
         }
     }
 
     @Test
     fun `No duplicate branches test`() {
-        Arbor.clear()
+        clear()
         val onDummy1Add = CompletableDeferred<Boolean>()
         val onDummy2Add = CompletableDeferred<Boolean>()
 
         val onDummy1Remove = CompletableDeferred<Boolean>()
         val onDummy2Remove = CompletableDeferred<Boolean>()
 
-        val dummyBranch1 = object : Branch(Verbose) {
+        val dummyBranch1 = object : Branch(Level.Verbose) {
             override fun onAdd() {
                 if (onDummy1Add.isCompleted) {
                     onDummy2Add.complete(true)
@@ -150,14 +150,14 @@ abstract class BranchTest {
             override fun onLog(level: Level, tag: String, message: String?, throwable: Throwable?) {}
         }
 
-        Arbor.addBranch(dummyBranch1)
+        addBranch(dummyBranch1)
         runTest {
             withTimeout(100) {
                 onDummy1Add.await()
-                assertEquals(1, Arbor.branchCount(), "Arbor branch count is off!")
+                assertEquals(1, _branchCount(), "Arbor branch count is off!")
             }
         }
-        Arbor.addBranch(dummyBranch1)
+        addBranch(dummyBranch1)
         assertFailsWith(TimeoutCancellationException::class, "Received duplicate branch!") {
             runTest {
                 withTimeout(100) {
@@ -166,14 +166,14 @@ abstract class BranchTest {
             }
         }
 
-        Arbor.removeBranch(dummyBranch1)
+        removeBranch(dummyBranch1)
         runTest {
             withTimeout(100) {
                 onDummy1Remove.await()
-                assertEquals(0, Arbor.branchCount(), "Arbor branch count is off!")
+                assertEquals(0, _branchCount(), "Arbor branch count is off!")
             }
         }
-        Arbor.removeBranch(dummyBranch1)
+        removeBranch(dummyBranch1)
         assertFailsWith(TimeoutCancellationException::class, "Branch was removed twice!") {
             runTest {
                 withTimeout(100) {
@@ -190,9 +190,9 @@ abstract class BranchTest {
             return "level $level, tag $tag, message $message, throwable: $throwable"
         }
 
-        Arbor.clear()
+        clear()
         val onLogString = CompletableDeferred<String>()
-        Arbor.addBranch(object : Branch(Error) {
+        addBranch(object : Branch(Level.Error) {
             override fun onAdd() {
             }
 
@@ -203,25 +203,25 @@ abstract class BranchTest {
                 onLogString.complete(createString(level, tag, message, throwable))
             }
         })
-        Arbor.e("Foo", "Some message", Exception("blah"))
+        e("Foo", "Some message", Exception("blah"))
         runTest {
             withTimeout(100) {
                 val string = onLogString.await()
-                assertEquals(createString(Error, "Foo", "Some message", Exception("blah")), string, "Strings are mismatched!")
+                assertEquals(createString(Level.Error, "Foo", "Some message", Exception("blah")), string, "Strings are mismatched!")
             }
         }
     }
 
     @Test
     fun `Ensure log levels are filtered`() {
-        Arbor.clear()
+        clear()
         val onErrorLevelLog = CompletableDeferred<Level>()
         val onWarnLevelLog = CompletableDeferred<Level>()
         val onInfoLevelLog = CompletableDeferred<Level>()
         val onDebugLevelLog = CompletableDeferred<Level>()
         val onVerboseLevelLog = CompletableDeferred<Level>()
 
-        Arbor.addBranch(object : Branch(Info) {
+        addBranch(object : Branch(Level.Info) {
             override fun onAdd() {
             }
 
@@ -230,29 +230,29 @@ abstract class BranchTest {
 
             override fun onLog(level: Level, tag: String, message: String?, throwable: Throwable?) {
                 when (level) {
-                    Error -> onErrorLevelLog.complete(level)
-                    Warn -> onWarnLevelLog.complete(level)
-                    Info -> onInfoLevelLog.complete(level)
-                    Debug -> onDebugLevelLog.complete(level)
-                    Verbose -> onVerboseLevelLog.complete(level)
+                    Level.Error -> onErrorLevelLog.complete(level)
+                    Level.Warn -> onWarnLevelLog.complete(level)
+                    Level.Info -> onInfoLevelLog.complete(level)
+                    Level.Debug -> onDebugLevelLog.complete(level)
+                    Level.Verbose -> onVerboseLevelLog.complete(level)
                 }
             }
         })
 
-        Arbor.i("Blah")
-        Arbor.e("Foo")
-        Arbor.w("Bar")
-        Arbor.d("Debugging stuff!")
+        i("Blah")
+        e("Foo")
+        w("Bar")
+        d("Debugging stuff!")
         runTest {
             withTimeout(100) {
                 val info = onInfoLevelLog.await()
-                assertEquals(Info, info, "Received wrong level")
+                assertEquals(Level.Info, info, "Received wrong level")
 
                 val error = onErrorLevelLog.await()
-                assertEquals(Error, error, "Received wrong level")
+                assertEquals(Level.Error, error, "Received wrong level")
 
                 val warn = onWarnLevelLog.await()
-                assertEquals(Warn, warn, "Received wrong level")
+                assertEquals(Level.Warn, warn, "Received wrong level")
             }
         }
         assertFailsWith(TimeoutCancellationException::class, "Received debug log when it should be filtered!") {
@@ -266,7 +266,7 @@ abstract class BranchTest {
 
     @Test
     fun `Ensure log tags are filtered`() {
-        Arbor.clear()
+        clear()
         val tag1 = "Foo"
         val tag2 = "Bar"
         val tag3 = "Baz"
@@ -274,7 +274,7 @@ abstract class BranchTest {
         val onTag2Log = CompletableDeferred<String>()
         val onTag3Log = CompletableDeferred<String>()
 
-        Arbor.addBranch(object : Branch(Verbose, tag1, tag2) {
+        addBranch(object : Branch(Level.Verbose, listOf(tag1, tag2)) {
             override fun onAdd() {
             }
 
@@ -290,9 +290,9 @@ abstract class BranchTest {
             }
         })
 
-        Arbor.i(tag1)
-        Arbor.e(tag2)
-        Arbor.w(tag3)
+        i(tag1)
+        e(tag2)
+        w(tag3)
         runTest {
             withTimeout(100) {
                 val tag1Result = onTag1Log.await()

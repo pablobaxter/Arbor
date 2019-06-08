@@ -2,7 +2,6 @@ package com.frybits.arbor.android
 
 import android.util.Log
 import com.frybits.arbor.Branch
-import com.frybits.arbor.Info
 import com.frybits.arbor.Level
 
 /**
@@ -10,7 +9,7 @@ import com.frybits.arbor.Level
  * Created by Pablo Baxter (Github: pablobaxter)
  */
 
-class ConsoleBranch(level: Level = Info, vararg tags: String) : Branch(level, *tags) {
+class ConsoleBranch(level: Level = Level.Info, tags: List<String>) : Branch(level, tags) {
 
     override fun onAdd() {
         //Do nothing
@@ -22,10 +21,10 @@ class ConsoleBranch(level: Level = Info, vararg tags: String) : Branch(level, *t
 
     override fun onLog(level: Level, tag: String, message: String?, throwable: Throwable?) {
         if (throwable != null) {
-            Log.println(level.logLevel, tag, "${message ?: ""} \n ${Log.getStackTraceString(throwable)}")
+            Log.println(level.toLogLevel(), tag, "${message ?: ""} \n ${Log.getStackTraceString(throwable)}")
         } else {
             if (message != null) {
-                Log.println(level.logLevel, tag, message)
+                Log.println(level.toLogLevel(), tag, message)
             }
         }
     }

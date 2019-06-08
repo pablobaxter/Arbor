@@ -8,7 +8,7 @@ import platform.Foundation.NSLog
  * Created by Pablo Baxter (Github: pablobaxter)
  */
 
-class ConsoleBranch(level: Level = Info, vararg tags: String) : Branch(level, *tags) {
+class ConsoleBranch(level: Level = Level.Info, tags: List<String> = listOf()) : Branch(level, tags) {
 
     override fun onAdd() {
         //Do nothing
@@ -20,12 +20,12 @@ class ConsoleBranch(level: Level = Info, vararg tags: String) : Branch(level, *t
 
     override fun onLog(level: Level, tag: String, message: String?, throwable: Throwable?) {
         when (level) {
-            Verbose, Debug, Info -> {
-                println("${level::class.simpleName}::$tag::${message ?: ""}")
+            Level.Verbose, Level.Debug, Level.Info -> {
+                println("${level.name}::$tag::${message ?: ""}")
                 throwable?.printStackTrace()
             }
-            Warn, Error -> {
-                NSLog("${level::class.simpleName}::$tag::${message ?: ""}\n")
+            Level.Warn, Level.Error -> {
+                NSLog("${level.name}::$tag::${message ?: ""}\n")
                 throwable?.printStackTrace()
             }
         }

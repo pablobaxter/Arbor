@@ -1,7 +1,6 @@
 package com.frybits.arbor
 
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import platform.darwin.dispatch_async
 import platform.darwin.dispatch_get_current_queue
 import platform.darwin.dispatch_get_main_queue
 import kotlin.native.concurrent.AtomicInt
@@ -21,9 +20,10 @@ internal actual class ArborLoggingContainer actual constructor() {
     internal actual fun submit(action: Action) {
         if (dispatch_get_current_queue() == dispatch_get_main_queue()) {
             handleAction(action)
-        }
-        GlobalScope.launch(Main) {
-            handleAction(action)
+        } else {
+            dispatch_async(dispatch_get_main_queue()) {
+                handleAction(action)
+            }
         }
     }
 

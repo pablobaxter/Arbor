@@ -3,17 +3,12 @@ apply plugin: 'org.jetbrains.kotlin.multiplatform'
 kotlin {
     jvm()
     targets {
-        def buildForDevice = project.findProperty("device")?.toBoolean() ?: false
-        def iosPreset = (buildForDevice) ? presets.iosArm64 : presets.iosX64
-        fromPreset(iosPreset, 'ios') {
-            binaries {
-                framework('Arbor') {
+        final def iOSTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos") \
+                              ? presets.iosArm64 : presets.iosX64
 
-                    // Disable bitcode embedding for the simulator build.
-                    if (!buildForDevice) {
-                        embedBitcode("disable")
-                    }
-                }
+        fromPreset(iOSTarget, 'ios') {
+            binaries {
+                framework('Arbor')
             }
         }
     }
@@ -31,7 +26,7 @@ kotlin {
             implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$kotlin_coroutine_version"
         }
         
-        iosMain.dependencies {
+        iosTest.dependencies {
             // COROUTINE
             implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-native:$kotlin_coroutine_version"
         }
@@ -68,3 +63,23 @@ task iosTest {
         }
     }
 }
+
+task packForXCode(type: Sync) {
+    final File frameworkDir = new File(buildDir, "xcode-frameworks")
+    final String mode = project.findProperty("XCODE_CONFIGURATION")?.toUpperCase() ?: 'DEBUG'
+    final def framework = kotlin.targets.ios.binaries.getFramework("Arbor", mode)
+
+    inputs.property "mode", mode
+    dependsOn framework.linkTask
+
+    from { framework.outputFile.parentFile }
+    into frameworkDir
+
+    doLast {
+        new File(frameworkDir, 'gradlew').with {
+            text = "#!/bin/bash\nexport 'JAVA_HOME=${System.getProperty("java.home")}'\ncd '${rootProject.rootDir}'\n./gradlew \$@\n"
+            setExecutable(true)
+        }
+    }
+}
+tasks.build.dependsOn packForXCode

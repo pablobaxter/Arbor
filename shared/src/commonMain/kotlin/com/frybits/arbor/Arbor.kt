@@ -1,44 +1,24 @@
 package com.frybits.arbor
 
-import kotlin.native.concurrent.ThreadLocal
-
 /**
  * Frybits
  * Created by Pablo Baxter (Github: pablobaxter)
  */
 
-//Needed for K/N coroutines
-@ThreadLocal
-object Arbor {
+internal expect fun addBranch(branch: Branch)
 
-    private val branchLoggingContainer = ArborLoggingContainer()
+internal expect fun removeBranch(branch: Branch)
 
-    fun addBranch(branch: Branch) {
-        branchLoggingContainer.submit(Add(branch))
-    }
+internal expect fun clear()
 
-    fun removeBranch(branch: Branch) {
-        branchLoggingContainer.submit(Remove(branch))
-    }
+internal expect fun log(level: Level, tag: String, message: String? = null, throwable: Throwable? = null)
 
-    fun clear() {
-        branchLoggingContainer.submit(Clear)
-    }
+internal expect fun e(tag: String, message: String? = null, throwable: Throwable? = null)
 
-    //Only visible for testing
-    internal fun branchCount(): Int = branchLoggingContainer.branchCount()
+internal expect fun w(tag: String, message: String? = null, throwable: Throwable? = null)
 
-    fun log(level: Level, tag: String, message: String? = null, throwable: Throwable? = null) {
-        branchLoggingContainer.submit(Log(level, tag, message, throwable))
-    }
+internal expect fun i(tag: String, message: String? = null, throwable: Throwable? = null)
 
-    fun e(tag: String, message: String? = null, throwable: Throwable? = null) = log(Error, tag, message, throwable)
+internal expect fun d(tag: String, message: String? = null, throwable: Throwable? = null)
 
-    fun w(tag: String, message: String? = null, throwable: Throwable? = null) = log(Warn, tag, message, throwable)
-
-    fun i(tag: String, message: String? = null, throwable: Throwable? = null) = log(Info, tag, message, throwable)
-
-    fun d(tag: String, message: String? = null, throwable: Throwable? = null) = log(Debug, tag, message, throwable)
-
-    fun v(tag: String, message: String? = null, throwable: Throwable? = null) = log(Verbose, tag, message, throwable)
-}
+internal expect fun v(tag: String, message: String? = null, throwable: Throwable? = null)

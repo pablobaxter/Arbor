@@ -5,9 +5,9 @@ package com.frybits.arbor
  * Created by Pablo Baxter (Github: pablobaxter)
  */
 
-abstract class Branch(private val logLevel: Level, vararg filterTags: String) {
+abstract class Branch(private val logLevel: Level, filterTags: List<String> = listOf()) {
 
-    private val filterTagSet = setOf(*filterTags)
+    private val filterTagSet = filterTags.toSet()
     private val branchDispatcher = BranchDispatcher(this)
 
     internal fun sendLog(log: Log) {

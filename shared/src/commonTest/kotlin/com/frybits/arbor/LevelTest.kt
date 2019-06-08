@@ -13,38 +13,38 @@ class LevelTest {
     @Test
     fun `Checking if Error is most restrictive`() {
         assertTrue("Error is not more restrictive than Warn") {
-            Error >= Warn
+            Level.Error >= Level.Warn
         }
         assertTrue("Error is not more restrictive than Info") {
-            Error >= Info
+            Level.Error >= Level.Info
         }
         assertTrue("Error is not more restrictive than Debug") {
-            Error >= Debug
+            Level.Error >= Level.Debug
         }
         assertTrue("Error is not more restrictive than Verbose") {
-            Error >= Verbose
+            Level.Error >= Level.Verbose
         }
         assertTrue("Error does not equal itself") {
-            Error == Error
+            Level.Error == Level.Error
         }
     }
 
     @Test
     fun `Checking if Verbose is least restrictive`() {
         assertTrue("Verbose is more restrictive then  Error") {
-            Verbose <= Error
+            Level.Verbose <= Level.Error
         }
         assertTrue("Verbose is more restrictive then Warn") {
-            Verbose <= Warn
+            Level.Verbose <= Level.Warn
         }
         assertTrue("Verbose is more restrictive then Info") {
-            Verbose <= Info
+            Level.Verbose <= Level.Info
         }
         assertTrue("Verbose is more restrictive then Debug") {
-            Verbose <= Debug
+            Level.Verbose <= Level.Debug
         }
         assertTrue("Verbose does not equal itself") {
-            Verbose == Verbose
+            Level.Verbose == Level.Verbose
         }
     }
 }
