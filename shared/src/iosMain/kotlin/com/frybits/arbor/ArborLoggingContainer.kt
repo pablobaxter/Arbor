@@ -1,7 +1,6 @@
 package com.frybits.arbor
 
 import platform.darwin.dispatch_async
-import platform.darwin.dispatch_get_current_queue
 import platform.darwin.dispatch_get_main_queue
 import kotlin.native.concurrent.AtomicInt
 
@@ -18,7 +17,7 @@ internal actual class ArborLoggingContainer actual constructor() {
 
     //TODO This should be changed when K/N coroutines fixes issues for native platform
     internal actual fun submit(action: Action) {
-        if (dispatch_get_current_queue() == dispatch_get_main_queue()) {
+        if (testEnvironment) {
             handleAction(action)
         } else {
             dispatch_async(dispatch_get_main_queue()) {

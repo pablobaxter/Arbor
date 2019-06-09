@@ -10,8 +10,12 @@ import kotlin.test.assertEquals
 
 class PlatformTest {
 
+    init {
+        testEnvironment = true
+    }
+
     @Test
     fun `Check for correct variant`() {
-        assertEquals("ios", Platform.VARIANT, "Test is in wrong variant")
+        assertEquals("ios", VARIANT, "Test is in wrong variant")
     }
 }

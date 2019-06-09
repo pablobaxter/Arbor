@@ -1,11 +1,12 @@
 package com.frybits.arbor
 
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
+import java.util.concurrent.Executors
 
 /**
  * Frybits
@@ -14,7 +15,7 @@ import org.junit.Before
 
 class JvmBranchTest : BranchTest() {
 
-    private val mainThreadSurrogate = newSingleThreadContext("UI thread")
+    private val mainThreadSurrogate = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
 
     @Before
     fun setUp() {

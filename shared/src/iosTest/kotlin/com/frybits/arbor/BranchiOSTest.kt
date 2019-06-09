@@ -5,4 +5,9 @@ package com.frybits.arbor
  * Created by Pablo Baxter (Github: pablobaxter)
  */
 
-class BranchiOSTest : BranchTest()
+class BranchiOSTest : BranchTest() {
+
+    init {
+        testEnvironment = true
+    }
+}

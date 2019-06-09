@@ -1,10 +1,8 @@
 package com.frybits.arbor
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import java.util.concurrent.Executors
 
 /**
  * Frybits
@@ -14,11 +12,13 @@ import kotlinx.coroutines.withContext
 internal actual class BranchDispatcher actual constructor(branch: Branch) {
 
     private val logChannel = Channel<Action>(Channel.UNLIMITED)
-
     private var isPlanted = false
 
+    private val coroutineDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
+    private val coroutineScope = CoroutineScope(coroutineDispatcher)
+
     init {
-        GlobalScope.launch(Dispatchers.Default) {
+        coroutineScope.launch {
             for (action in logChannel) {
                 when (action) {
                     is Add -> {
@@ -47,5 +47,9 @@ internal actual class BranchDispatcher actual constructor(branch: Branch) {
 
     actual fun submit(action: Action) {
         logChannel.offer(action)
+    }
+
+    fun finalize() {
+        coroutineDispatcher.close()
     }
 }

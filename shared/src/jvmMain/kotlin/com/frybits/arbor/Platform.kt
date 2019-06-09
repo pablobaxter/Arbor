@@ -1,3 +1,5 @@
+@file:JvmName("Platform")
+
 package com.frybits.arbor
 
 /**
@@ -5,8 +7,5 @@ package com.frybits.arbor
  * Created by Pablo Baxter (Github: pablobaxter)
  */
 
-actual object Platform {
-
-    @Suppress("MayBeConstant")
-    actual val VARIANT = "jvm"
-}
+@Suppress("MayBeConstant")
+actual val VARIANT = "jvm"

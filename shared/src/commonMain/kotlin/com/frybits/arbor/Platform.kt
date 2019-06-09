@@ -5,7 +5,4 @@ package com.frybits.arbor
  * Created by Pablo Baxter (Github: pablobaxter)
  */
 
-expect object Platform {
-
-    val VARIANT: String
-}
+expect val VARIANT: String

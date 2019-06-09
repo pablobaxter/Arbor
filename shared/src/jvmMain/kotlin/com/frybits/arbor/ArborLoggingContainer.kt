@@ -1,9 +1,8 @@
 package com.frybits.arbor
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.launch
+import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -14,11 +13,12 @@ import java.util.concurrent.atomic.AtomicInteger
 internal actual class ArborLoggingContainer actual constructor() {
 
     private val updateChannel = Channel<Action>(Channel.UNLIMITED)
-
     private val branchCount = AtomicInteger(0)
+    private val coroutineDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
+    private val coroutineScope = CoroutineScope(coroutineDispatcher)
 
     init {
-        GlobalScope.launch(Dispatchers.Default) {
+        coroutineScope.launch {
             val branches = mutableSetOf<Branch>()
             for (action in updateChannel) {
                 when (action) {

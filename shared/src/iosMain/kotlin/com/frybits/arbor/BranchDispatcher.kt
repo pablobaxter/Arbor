@@ -27,7 +27,8 @@ internal actual class BranchDispatcher actual constructor(private val branch: Br
                     branch.log(action)
                 }
             }
-
+            //Shuts up build warnings
+            else -> Unit
         }
     }
 }

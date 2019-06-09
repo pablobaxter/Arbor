@@ -3,8 +3,8 @@ apply plugin: 'org.jetbrains.kotlin.multiplatform'
 kotlin {
     jvm()
     targets {
-        final def iOSTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos") \
-                              ? presets.iosArm64 : presets.iosX64
+        final def iOSTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos")  \
+                                ? presets.iosArm64 : presets.iosX64
 
         fromPreset(iOSTarget, 'ios') {
             binaries {
@@ -12,7 +12,7 @@ kotlin {
             }
         }
     }
-    
+
     sourceSets {
         commonMain.dependencies {
             implementation "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
@@ -25,12 +25,12 @@ kotlin {
             // COROUTINE
             implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$kotlin_coroutine_version"
         }
-        
+
         iosTest.dependencies {
             // COROUTINE
             implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-native:$kotlin_coroutine_version"
         }
-        
+
         jvmMain.dependencies {
             // COROUTINE
             implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutine_version"
@@ -55,7 +55,7 @@ task iosTest {
     dependsOn 'linkTestDebugExecutableIos'
     group = JavaBasePlugin.VERIFICATION_GROUP
     description = "Runs test for target 'ios' on an iOS simulator"
-    
+
     doLast {
         def binary = kotlin.targets.ios.binaries.getExecutable('test', 'DEBUG').outputFile
         exec {

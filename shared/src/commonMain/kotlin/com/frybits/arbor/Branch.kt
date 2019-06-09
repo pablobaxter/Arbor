@@ -23,7 +23,7 @@ abstract class Branch(private val logLevel: Level, filterTags: List<String> = li
     }
 
     internal fun log(log: Log) {
-        if (log.level >= logLevel && (filterTagSet.isEmpty()) || filterTagSet.contains(log.tag)) {
+        if (log.level >= logLevel && (filterTagSet.isEmpty() || filterTagSet.contains(log.tag))) {
             onLog(log.level, log.tag, log.message, log.throwable)
         }
     }

@@ -1,6 +1,7 @@
 package com.frybits.arbor.ios
 
-import com.frybits.arbor.*
+import com.frybits.arbor.Branch
+import com.frybits.arbor.Level
 import platform.Foundation.NSLog
 
 /**
@@ -8,7 +9,15 @@ import platform.Foundation.NSLog
  * Created by Pablo Baxter (Github: pablobaxter)
  */
 
-class ConsoleBranch(level: Level = Level.Info, tags: List<String> = listOf()) : Branch(level, tags) {
+class ConsoleBranch : Branch {
+
+    constructor() : super(Level.Info, listOf())
+
+    constructor(level: Level = Level.Info) : super(level, listOf())
+
+    constructor(tags: List<String>) : super(Level.Info, tags)
+
+    constructor(level: Level, tags: List<String>) : super(level, tags)
 
     override fun onAdd() {
         //Do nothing

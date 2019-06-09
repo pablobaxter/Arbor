@@ -12,6 +12,6 @@ class PlatformTest {
 
     @Test
     fun `Check for correct variant`() {
-        assertEquals("jvm", Platform.VARIANT, "Test is in wrong variant")
+        assertEquals("jvm", VARIANT, "Test is in wrong variant")
     }
 }
