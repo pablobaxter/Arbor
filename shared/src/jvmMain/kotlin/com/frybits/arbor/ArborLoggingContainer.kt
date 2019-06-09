@@ -39,7 +39,7 @@ internal actual class ArborLoggingContainer actual constructor() {
                         }
                     }
                     Clear -> {
-                        branches.removeForEach {
+                        branches.forEachThenRemove {
                             it.notifyRemove()
                         }
                         branchCount.set(0)

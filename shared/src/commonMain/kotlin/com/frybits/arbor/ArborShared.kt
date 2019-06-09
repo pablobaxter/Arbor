@@ -5,6 +5,9 @@ package com.frybits.arbor
  * Created by Pablo Baxter (Github: pablobaxter)
  */
 
+//These are the shared methods. The "object" keyword functions differently between K/JVM and K/N, so this is to reconcile those issues
+//and allow each platform to define their "Arbor" class appropriately.
+
 private val branchLoggingContainer = ArborLoggingContainer()
 
 internal fun sharedAddBranch(branch: Branch) {

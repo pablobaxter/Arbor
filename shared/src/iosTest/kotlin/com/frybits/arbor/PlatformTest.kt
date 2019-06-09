@@ -16,6 +16,6 @@ class PlatformTest {
 
     @Test
     fun `Check for correct variant`() {
-        assertEquals("ios", VARIANT, "Test is in wrong variant")
+        assertEquals("iOS", VARIANT, "Test is in wrong variant")
     }
 }

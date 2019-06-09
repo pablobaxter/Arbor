@@ -5,6 +5,7 @@ package com.frybits.arbor
  * Created by Pablo Baxter (Github: pablobaxter)
  */
 
+//The types of actions to submit to Arbor
 internal sealed class Action
 
 internal data class Add(internal val branch: Branch) : Action()

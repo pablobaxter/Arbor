@@ -29,7 +29,7 @@ class AndroidBranchTest {
     }
 
     @Test(timeout = 1000)
-    fun AddBranchIsMainLooper() {
+    fun addBranchIsMainLooper() {
         val completableDeferred = CompletableDeferred<Boolean>()
         Arbor.addBranch(object : Branch(Level.Info) {
             override fun onAdd() {
@@ -53,7 +53,7 @@ class AndroidBranchTest {
     }
 
     @Test(timeout = 1000)
-    fun RemoveBranchIsMainLooper() {
+    fun removeBranchIsMainLooper() {
         val completableDeferred = CompletableDeferred<Boolean>()
         val branch = object : Branch(Level.Info) {
             override fun onAdd() {
@@ -79,7 +79,7 @@ class AndroidBranchTest {
     }
 
     @Test(timeout = 1000)
-    fun LogIsNotMainLooper() {
+    fun logIsNotMainLooper() {
         val completableDeferred = CompletableDeferred<Boolean>()
         Arbor.addBranch(object : Branch(Level.Info) {
             override fun onAdd() {
