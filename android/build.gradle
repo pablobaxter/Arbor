@@ -8,7 +8,7 @@ android {
         minSdkVersion minSdk_version
         targetSdkVersion targetSdk_version
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -24,7 +24,6 @@ android {
     }
 }
 
-
 dependencies {
     
     implementation project (':shared')
@@ -37,5 +36,6 @@ dependencies {
     //Test
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test:runner:$androidx_test_runner_version"
+    androidTestImplementation "androidx.test:rules:$androidx_test_runner_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidx_espresso_core_version"
 }

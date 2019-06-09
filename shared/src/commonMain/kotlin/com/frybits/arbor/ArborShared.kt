@@ -7,21 +7,21 @@ package com.frybits.arbor
 
 private val branchLoggingContainer = ArborLoggingContainer()
 
-internal fun _addBranch(branch: Branch) {
+internal fun sharedAddBranch(branch: Branch) {
     branchLoggingContainer.submit(Add(branch))
 }
 
-internal fun _removeBranch(branch: Branch) {
+internal fun sharedRemoveBranch(branch: Branch) {
     branchLoggingContainer.submit(Remove(branch))
 }
 
-internal fun _clear() {
+internal fun sharedClear() {
     branchLoggingContainer.submit(Clear)
 }
 
 //Only visible for testing
-internal fun _branchCount(): Int = branchLoggingContainer.branchCount()
+internal fun sharedBranchCount(): Int = branchLoggingContainer.branchCount()
 
-internal fun _log(level: Level, tag: String, message: String? = null, throwable: Throwable? = null) {
+internal fun sharedLog(level: Level, tag: String, message: String? = null, throwable: Throwable? = null) {
     branchLoggingContainer.submit(Log(level, tag, message, throwable))
 }

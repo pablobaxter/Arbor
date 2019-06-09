@@ -9,7 +9,7 @@ import com.frybits.arbor.Level
  * Created by Pablo Baxter (Github: pablobaxter)
  */
 
-class ConsoleBranch(level: Level = Level.Info, tags: List<String>) : Branch(level, tags) {
+class ConsoleBranch(level: Level = Level.Info, tags: List<String> = listOf()) : Branch(level, tags) {
 
     override fun onAdd() {
         //Do nothing
