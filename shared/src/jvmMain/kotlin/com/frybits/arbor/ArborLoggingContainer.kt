@@ -15,10 +15,9 @@ internal actual class ArborLoggingContainer actual constructor() {
     private val updateChannel = Channel<Action>(Channel.UNLIMITED)
     private val branchCount = AtomicInteger(0)
     private val coroutineDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
-    private val coroutineScope = CoroutineScope(coroutineDispatcher)
 
     init {
-        coroutineScope.launch {
+        GlobalScope.launch(coroutineDispatcher) {
             val branches = mutableSetOf<Branch>()
             for (action in updateChannel) {
                 when (action) {

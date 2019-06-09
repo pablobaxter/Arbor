@@ -17,7 +17,7 @@ internal actual class ArborLoggingContainer actual constructor() {
 
     //TODO This should be changed when K/N coroutines fixes issues for native platform
     internal actual fun submit(action: Action) {
-        if (testEnvironment) {
+        if (testEnvironment) { //Test environment doesn't play well with async. This will be fixed when K/MPP is released
             handleAction(action)
         } else {
             dispatch_async(dispatch_get_main_queue()) {

@@ -15,10 +15,9 @@ internal actual class BranchDispatcher actual constructor(branch: Branch) {
     private var isPlanted = false
 
     private val coroutineDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
-    private val coroutineScope = CoroutineScope(coroutineDispatcher)
 
     init {
-        coroutineScope.launch {
+        GlobalScope.launch(coroutineDispatcher) {
             for (action in logChannel) {
                 when (action) {
                     is Add -> {
