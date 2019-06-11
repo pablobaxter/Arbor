@@ -1,0 +1,47 @@
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
+
+project.ext.configureMavenCentralMetadata = { pom ->
+    def root = asNode()
+    root.appendNode('name', 'Arbor JVM')
+    root.appendNode('description', 'Base JVM library for Arbor')
+    def license = root.appendNode('licenses').appendNode('license')
+    license.appendNode('name', 'MIT License')
+    license.appendNode('url', 'https://opensource.org/licenses/MIT')
+    def developer = root.appendNode('developers').appendNode('developer')
+    developer.appendNode('id', 'soaboz')
+    developer.appendNode('name', 'Pablo Baxter')
+    developer.appendNode('email', 'pablo@frybits.com')
+    root.children().last()
+}
+
+project.ext.configureMavenCentralAndroidMetaData = { pom ->
+    def root = asNode()
+    root.appendNode('name', 'Arbor Android')
+    root.appendNode('description', 'Android library for Arbor')
+    def license = root.appendNode('licenses').appendNode('license')
+    license.appendNode('name', 'MIT License')
+    license.appendNode('url', 'https://opensource.org/licenses/MIT')
+    def developer = root.appendNode('developers').appendNode('developer')
+    developer.appendNode('id', 'soaboz')
+    developer.appendNode('name', 'Pablo Baxter')
+    developer.appendNode('email', 'pablo@frybits.com')
+    
+    def dependenciesNode = root.appendNode('dependencies')
+
+    // Iterate over the implementation dependencies (we don't want the test ones), adding a <dependency> node for each
+    configurations.implementation.allDependencies.each {
+        // Ensure dependencies such as fileTree are not included in the pom.
+        if (it.name == 'shared') {
+            def dependencyNode = dependenciesNode.appendNode('dependency')
+            dependencyNode.appendNode('groupId', it.group)
+            dependencyNode.appendNode('artifactId', it.name + '-jvm')
+            dependencyNode.appendNode('version', it.version)
+        } else if (it.name != 'unspecified') {
+            def dependencyNode = dependenciesNode.appendNode('dependency')
+            dependencyNode.appendNode('groupId', it.group)
+            dependencyNode.appendNode('artifactId', it.name)
+            dependencyNode.appendNode('version', it.version)
+        }
+    }
+}
