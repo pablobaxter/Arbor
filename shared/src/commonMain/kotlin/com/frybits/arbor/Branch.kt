@@ -1,5 +1,7 @@
 package com.frybits.arbor
 
+import kotlin.jvm.JvmOverloads
+
 /**
  * Frybits
  * Created by Pablo Baxter (Github: pablobaxter)
@@ -10,7 +12,7 @@ package com.frybits.arbor
  * to allow the correct multithreaded functionality in JVM, but the workaround with only main-thread functionality for iOS
  */
 
-abstract class Branch(
+abstract class Branch @JvmOverloads constructor(
         /**
          * The highest log level this branch should log to.
          */
